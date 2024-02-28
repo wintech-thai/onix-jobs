@@ -18,4 +18,3 @@ WORKDIR /scripts
 COPY scripts/ .
 
 RUN pwd; ls -al
-RUN gcloud version
