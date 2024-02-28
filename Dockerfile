@@ -8,3 +8,4 @@ WORKDIR /scripts
 COPY scripts/ .
 
 RUN pwd; ls -al
+RUN pg_dump
