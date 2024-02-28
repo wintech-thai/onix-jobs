@@ -1,6 +1,8 @@
-FROM gcr.io/google.com/cloudsdktool/google-cloud-cli:latest
+FROM ubuntu:latest
 
-RUN apk add --no-cache postgresql-client
+RUN apt-get update -y
+RUN apt-get install -y supervisor tor wget curl unzip vim
+RUN apt-get install -y postgresql-client postgresql-client-common libpq-dev
 
 WORKDIR /scripts
 COPY scripts/ .
