@@ -10,6 +10,7 @@ RUN apt-get update -y
 RUN apt-get install -y postgresql-client postgresql-client-common libpq-dev
 RUN pg_dump --version
 
+# Install pg_dump version 16.2
 RUN curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
 RUN chmod +x kubectl
 RUN mv kubectl /usr/local/bin
