@@ -2,7 +2,7 @@ FROM ubuntu:latest
 
 RUN apt-get update -y
 RUN apt-get install -y supervisor tor wget curl unzip vim apt-transport-https ca-certificates gnupg
-RUN apt-get install -y postgresql-client postgresql-client-common libpq-dev
+RUN apt-get install -y postgresql-client-16 postgresql-client-common libpq-dev
 
 RUN curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
 RUN chmod +x kubectl
