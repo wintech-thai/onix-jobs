@@ -21,3 +21,4 @@ kubectl cp ${NS}/${POD_NAME}:${POD_SRC_DIR} ${DST_DIR}/storage
 
 ls -al ${DST_DIR}
 find . -name ${DST_DIR}/storage
+
