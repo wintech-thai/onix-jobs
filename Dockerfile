@@ -25,3 +25,4 @@ WORKDIR /scripts
 COPY scripts/ .
 
 RUN pwd; ls -al
+
