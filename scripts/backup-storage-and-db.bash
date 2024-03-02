@@ -10,6 +10,7 @@ DST_DIR=/tmp
 TS=$(date +%Y%m%d_%H%M%S)
 DMP_FILE=onix-acdsign-backup-${TS}.sql
 POD_SRC_DIR=/wis/data/storage
+BUCKET_NAME=onix-v2-backup
 
 gcloud auth activate-service-account --key-file=${GOOGLE_APPLICATION_CREDENTIALS}
 pg_dump --dbname="postgresql://${PG_USER}:${PG_PASSWORD}@${PG_HOST}:5432/${PG_DATABASE}" > ${DST_DIR}/${DMP_FILE}
@@ -21,3 +22,22 @@ kubectl cp ${NS}/${POD_NAME}:${POD_SRC_DIR} ${DST_DIR}/storage
 
 ls -al ${DST_DIR}
 find ${DST_DIR}/storage 
+
+EXPORTED_FILE=${DST_DIR}/${DMP_FILE}
+FILE_SIZE=$(stat -c%s ${EXPORTED_FILE})
+TMP_TEMPLATE=/tmp/slack.json
+# NOTE : SLACK_URI is injected via env variable
+LINE_CNT=$(wc -l ${EXPORTED_FILE} | cut -d' ' -f1)
+GCS_PATH_DB=gs://${BUCKET_NAME}/db-backup/${DMP_FILE}
+
+gsutil cp ${EXPORTED_FILE} ${GCS_PATH_DB}
+
+cat << EOF > ${TMP_TEMPLATE}
+{
+    "text": "Uploaded file [${EXPORTED_FILE}], file size=[${FILE_SIZE}], line count=[${LINE_CNT}] to [${GCS_PATH_DB}]\n"
+}
+EOF
+curl -X POST -H 'Content-type: application/json' --data "@${TMP_TEMPLATE}" ${SLACK_URI}
+
+#gs://onix-v2-backup/db-backup
+#gs://onix-v2-backup/files-backup
