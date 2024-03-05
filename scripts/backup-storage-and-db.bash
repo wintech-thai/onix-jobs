@@ -44,13 +44,13 @@ curl -X POST -H 'Content-type: application/json' --data "@${TMP_TEMPLATE}" ${SLA
 
 ### Message 2 ###
 FILE_SIZE=$(stat -c%s ${DST_DIR}/${BACKUP_FILE})
-GCS_PATH_DB=gs://${BUCKET_NAME}/db-backup/${BACKUP_FILE}
+GCS_PATH_FILE=gs://${BUCKET_NAME}/files-backup/${BACKUP_FILE}
 
-gsutil cp ${DST_DIR}/${BACKUP_FILE} ${GCS_PATH_DB}
+gsutil cp ${DST_DIR}/${BACKUP_FILE} ${GCS_PATH_FILE}
 
 cat << EOF > ${TMP_TEMPLATE}
 {
-    "text": "Uploaded file [${GCS_PATH_DB}], file size=[${FILE_SIZE}]"
+    "text": "Uploaded file [${GCS_PATH_FILE}], file size=[${FILE_SIZE}]"
 }
 EOF
 curl -X POST -H 'Content-type: application/json' --data "@${TMP_TEMPLATE}" ${SLACK_URI}
