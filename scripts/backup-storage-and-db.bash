@@ -32,14 +32,25 @@ TMP_TEMPLATE=/tmp/slack.json
 LINE_CNT=$(wc -l ${EXPORTED_FILE} | cut -d' ' -f1)
 GCS_PATH_DB=gs://${BUCKET_NAME}/db-backup/${DMP_FILE}
 
-gsutil cp ${EXPORTED_FILE} ${DST_DIR}/${BACKUP_FILE} ${GCS_PATH_DB}
+gsutil cp ${EXPORTED_FILE} ${GCS_PATH_DB}
 
+### Message 1 ###
 cat << EOF > ${TMP_TEMPLATE}
 {
-    "text": "Uploaded file [${EXPORTED_FILE}], file size=[${FILE_SIZE}], line count=[${LINE_CNT}] to [${GCS_PATH_DB}]\n"
+    "text": "Uploaded file [${GCS_PATH_DB}], file size=[${FILE_SIZE}], line count=[${LINE_CNT}]"
 }
 EOF
 curl -X POST -H 'Content-type: application/json' --data "@${TMP_TEMPLATE}" ${SLACK_URI}
 
-#gs://onix-v2-backup/db-backup
-#gs://onix-v2-backup/files-backup
+### Message 2 ###
+FILE_SIZE=$(stat -c%s ${DST_DIR}/${BACKUP_FILE})
+GCS_PATH_DB=gs://${BUCKET_NAME}/db-backup/${BACKUP_FILE}
+
+gsutil cp ${DST_DIR}/${BACKUP_FILE} ${GCS_PATH_DB}
+
+cat << EOF > ${TMP_TEMPLATE}
+{
+    "text": "Uploaded file [${GCS_PATH_DB}], file size=[${FILE_SIZE}]"
+}
+EOF
+curl -X POST -H 'Content-type: application/json' --data "@${TMP_TEMPLATE}" ${SLACK_URI}

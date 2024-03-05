@@ -2,7 +2,7 @@ FROM ubuntu:latest
 
 
 RUN apt-get update -y
-RUN apt-get install -y supervisor tor wget curl unzip vim apt-transport-https ca-certificates gnupg lsb-release 
+RUN apt-get install -y supervisor tor wget curl zip unzip vim apt-transport-https ca-certificates gnupg lsb-release 
 
 RUN echo "deb http://apt.postgresql.org/pub/repos/apt/ $(lsb_release -cs)-pgdg main" > /etc/apt/sources.list.d/pgdg.list
 RUN wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | apt-key add -
