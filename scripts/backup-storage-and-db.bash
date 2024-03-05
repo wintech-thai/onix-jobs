@@ -20,8 +20,10 @@ POD_NAME=$(kubectl get pods -n ${NS} | grep ${NAME_PREFIX} | head -1 | cut -f1 -
 echo "POD_NAME = [${POD_NAME}]"
 kubectl cp ${NS}/${POD_NAME}:${POD_SRC_DIR} ${DST_DIR}/storage
 
+BACKUP_FILE=onix-acdsign-images-${TS}.zip 
+zip -r ${DST_DIR}/${BACKUP_FILE} ${DST_DIR}/storage
 ls -al ${DST_DIR}
-find ${DST_DIR}/storage 
+find ${DST_DIR}/storage
 
 EXPORTED_FILE=${DST_DIR}/${DMP_FILE}
 FILE_SIZE=$(stat -c%s ${EXPORTED_FILE})
@@ -30,7 +32,7 @@ TMP_TEMPLATE=/tmp/slack.json
 LINE_CNT=$(wc -l ${EXPORTED_FILE} | cut -d' ' -f1)
 GCS_PATH_DB=gs://${BUCKET_NAME}/db-backup/${DMP_FILE}
 
-gsutil cp ${EXPORTED_FILE} ${GCS_PATH_DB}
+gsutil cp ${EXPORTED_FILE} ${DST_DIR}/${BACKUP_FILE} ${GCS_PATH_DB}
 
 cat << EOF > ${TMP_TEMPLATE}
 {
