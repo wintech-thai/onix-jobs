@@ -17,12 +17,22 @@ DST_DIR=/tmp
 #TS=$(date +%Y%m%d_%H%M%S)
 POD_DST_DIR=/wis/data/storage
 
+if [ ! -z "${SOURCE_BACKUP_FILE}" ]; then
+    GCS_PATH_DB=${SOURCE_BACKUP_FILE}
+    DMP_FILE=$(basename ${GCS_PATH_DB})
+fi
+
+if [ ! -z "${SOURCE_BACKUP_IMAGES}" ]; then
+    GCS_PATH_IMAGES=${SOURCE_BACKUP_IMAGES}
+    IMAGE_FILE=$(basename ${GCS_PATH_IMAGES})
+fi
 
 gcloud auth activate-service-account --key-file=${GOOGLE_APPLICATION_CREDENTIALS}
 gsutil cp ${GCS_PATH_DB} ${DST_DIR} 
 gsutil cp ${GCS_PATH_IMAGES} ${DST_DIR} 
 
-pg_restore -c --no-privileges --no-owner --dbname="postgresql://${PG_USER}:${PG_PASSWORD}@${PG_HOST}:5432/${PG_DATABASE}" ${DST_DIR}/${DMP_FILE}
+echo "Restoring from [${GCS_PATH_DB}] and [${GCS_PATH_IMAGES}]..."
+psql "postgresql://${PG_USER}:${PG_PASSWORD}@${PG_HOST}:5432/${PG_DATABASE}" -f ${DST_DIR}/${DMP_FILE}
 
 POD_NAME=$(kubectl get pods -n ${NS} | grep ${NAME_PREFIX} | head -1 | cut -f1 -d' ')
 
