@@ -38,7 +38,7 @@ POD_NAME=$(kubectl get pods -n ${NS} | grep ${NAME_PREFIX} | head -1 | cut -f1 -
 
 echo "POD_NAME = [${POD_NAME}]"
 kubectl cp ${DST_DIR}/${IMAGE_FILE} ${NS}/${POD_NAME}:${POD_DST_DIR}
-kubectl exec -it -n ${NS} ${POD_NAME} -- tar -xvf ${POD_DST_DIR}/${IMAGE_FILE}
+kubectl exec -i -n ${NS} ${POD_NAME} -- tar -xvf ${POD_DST_DIR}/${IMAGE_FILE}
 
 ### Message 1 ###
 cat << EOF > ${TMP_TEMPLATE}
