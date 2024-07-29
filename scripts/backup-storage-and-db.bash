@@ -13,7 +13,7 @@ POD_SRC_DIR=/wis/data/storage
 BUCKET_NAME=onix-v2-backup
 
 gcloud auth activate-service-account --key-file=${GOOGLE_APPLICATION_CREDENTIALS}
-pg_dump --dbname="postgresql://${PG_USER}:${PG_PASSWORD}@${PG_HOST}:5432/${PG_DATABASE}" > ${DST_DIR}/${DMP_FILE}
+pg_dump -c --dbname="postgresql://${PG_USER}:${PG_PASSWORD}@${PG_HOST}:5432/${PG_DATABASE}" > ${DST_DIR}/${DMP_FILE}
 
 POD_NAME=$(kubectl get pods -n ${NS} | grep ${NAME_PREFIX} | head -1 | cut -f1 -d' ')
 
@@ -37,7 +37,7 @@ gsutil cp ${EXPORTED_FILE} ${GCS_PATH_DB}
 ### Message 1 ###
 cat << EOF > ${TMP_TEMPLATE}
 {
-    "text": "Uploaded file [${GCS_PATH_DB}], file size=[${FILE_SIZE}], line count=[${LINE_CNT}]"
+    "text": "[${NAMESPACE}] Uploaded file [${GCS_PATH_DB}], file size=[${FILE_SIZE}], line count=[${LINE_CNT}]"
 }
 EOF
 curl -X POST -H 'Content-type: application/json' --data "@${TMP_TEMPLATE}" ${SLACK_URI}
@@ -50,7 +50,7 @@ gsutil cp ${DST_DIR}/${BACKUP_FILE} ${GCS_PATH_FILE}
 
 cat << EOF > ${TMP_TEMPLATE}
 {
-    "text": "Uploaded file [${GCS_PATH_FILE}], file size=[${FILE_SIZE}]"
+    "text": "[${NAMESPACE}] Uploaded file [${GCS_PATH_FILE}], file size=[${FILE_SIZE}]"
 }
 EOF
 curl -X POST -H 'Content-type: application/json' --data "@${TMP_TEMPLATE}" ${SLACK_URI}
