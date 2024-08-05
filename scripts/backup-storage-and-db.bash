@@ -5,10 +5,11 @@ echo "POD_NAME_PREFIX = [${POD_NAME_PREFIX}]"
 
 NAME_PREFIX=${POD_NAME_PREFIX}
 NS=${NAMESPACE}
+EXT=${EXTENSION}
 
 DST_DIR=/tmp
 TS=$(date +%Y%m%d_%H%M%S)
-DMP_FILE=onix-acdsign-backup-${TS}.sql
+DMP_FILE=onix-acdsign-${EXT}-backup-${TS}.sql
 POD_SRC_DIR=/wis/data/storage
 BUCKET_NAME=onix-v2-backup
 
