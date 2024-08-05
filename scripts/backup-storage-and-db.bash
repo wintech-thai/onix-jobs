@@ -21,7 +21,7 @@ POD_NAME=$(kubectl get pods -n ${NS} | grep ${NAME_PREFIX} | head -1 | cut -f1 -
 echo "POD_NAME = [${POD_NAME}]"
 kubectl cp ${NS}/${POD_NAME}:${POD_SRC_DIR} ${DST_DIR}/storage
 
-BACKUP_FILE=onix-acdsign-images-${TS}.zip 
+BACKUP_FILE=onix-acdsign-${EXT}-images-${TS}.zip 
 zip -r ${DST_DIR}/${BACKUP_FILE} ${DST_DIR}/storage
 ls -al ${DST_DIR}
 find ${DST_DIR}/storage
