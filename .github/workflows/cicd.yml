@@ -155,7 +155,7 @@ jobs:
         ls -lrt
         cat ${VALUE_FILE}
 
-        git add ${VALUE_FILE}; git commit --m "Update image tag by auto deploy script"; git push
+        #git add ${VALUE_FILE}; git commit --m "Update image tag by auto deploy script"; git push
 
     - name: Discord notification end
       if: always()
